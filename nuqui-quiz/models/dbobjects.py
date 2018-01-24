@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Table, ForeignKey
+from sqlalchemy import Column, Integer, String, Table, ForeignKey, Date
 from sqlalchemy.orm import relationship
 import timestamp as timestamp
 
@@ -15,8 +15,8 @@ class Question(Base):
 class User(Base):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True),
-    name = Column(String),
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
     score = Column(Integer, ForeignKey('scores.id'))
 
     def to_dictionary(self):
@@ -31,17 +31,17 @@ class User(Base):
 class Score(Base):
     __tablename__ = 'scores'
 
-    id = Column(Integer, primary_key=True),
-    points = Column(Integer),
-    latest_points = Column(Integer),
+    id = Column(Integer, primary_key=True)
+    points = Column(Integer)
+    latest_points = Column(Integer)
 
 
 class Meal(Base):
     __tablename__='meals'
 
-    id = Column(Integer, primary_key=True),
-    timestamp = Column(timestamp),
-    calories = Column(Integer),
+    id = Column(Integer, primary_key=True)
+    timestamp = Column(Date)
+    calories = Column(Integer)
     food = Column(String)
 
     def to_dictionary(self):
@@ -51,11 +51,4 @@ class Meal(Base):
             "calories": self.calories,
             "food": self.food
         }
-
-
-
-
-
-
-
 
