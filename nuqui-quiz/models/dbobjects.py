@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Table, ForeignKey, Date
 from sqlalchemy.orm import relationship
-import timestamp as timestamp
+
 
 
 class Question(Base):
