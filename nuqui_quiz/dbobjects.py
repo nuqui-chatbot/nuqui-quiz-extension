@@ -1,10 +1,16 @@
 from sqlalchemy import Column, Integer, String, Table, ForeignKey, Date
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 #declare a mapping
 global Base
 Base = declarative_base()
 
+User_question = Table(
+        'user_question', Base.metadata,
+        Column('user_id', Integer, ForeignKey('user.id')),
+        Column('question_id', Integer, ForeignKey('downloaded_question.id'))
+ )
 
 class Question(Base):
     __tablename__ = 'downloaded_question'
@@ -14,20 +20,29 @@ class Question(Base):
     question = Column(String)
     value = Column(Integer)
 
+    def to_dictionary(self):
+        return {
+                "id": self.id,
+                "question": self.question,
+                "answer": self.answer,
+                "value": self.value
+                }
 
 class User(Base):
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    score = Column(Integer, ForeignKey('score.id'))
+    score = relationship("Score", uselist=False)
+    questions = relationship("Question", secondary=User_question) 
 
     def to_dictionary(self):
         return {
             "id": self.id,
             "name": self.name,
             "points": self.score.points,
-            "last_points": self.score.latest_points
+            "last_points": self.score.latest_points,
+            "questions": self.questions
         }
 
 
@@ -37,7 +52,7 @@ class Score(Base):
     id = Column(Integer, primary_key=True)
     points = Column(Integer)
     latest_points = Column(Integer)
-
+    user_id = Column(Integer, ForeignKey("user.id"))
 
 class Meal(Base):
     __tablename__='meal'
