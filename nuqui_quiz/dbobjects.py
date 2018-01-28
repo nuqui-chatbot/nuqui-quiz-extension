@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Table, ForeignKey, Date
+from sqlalchemy import Column, Integer, String, Table, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -12,6 +12,14 @@ User_question = Table(
         Column('question_id', Integer, ForeignKey('downloaded_question.id'))
  )
 
+
+User_meal = Table(
+    'user_meal', Base.metadata,
+    Column('user_id', Integer, ForeignKey('user.id')),
+    Column('meal_id', Integer, ForeignKey('meal.id'))
+)
+
+
 class Question(Base):
     __tablename__ = 'downloaded_question'
 
@@ -23,10 +31,11 @@ class Question(Base):
     def to_dictionary(self):
         return {
                 "id": self.id,
-                "question": self.question,
+                "question": self.question_string,
                 "answer": self.answer,
                 "value": self.value
                 }
+
 
 class User(Base):
     __tablename__ = 'user'
@@ -34,7 +43,8 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     score = relationship("Score", uselist=False)
-    questions = relationship("Question", secondary=User_question) 
+    questions = relationship("Question", secondary=User_question)
+    meals = relationship("Meal", secondary=User_meal)
 
     def to_dictionary(self):
         return {
@@ -54,11 +64,12 @@ class Score(Base):
     latest_points = Column(Integer)
     user_id = Column(Integer, ForeignKey("user.id"))
 
+
 class Meal(Base):
     __tablename__='meal'
 
     id = Column(Integer, primary_key=True)
-    timestamp = Column(Date)
+    timestamp = Column(DateTime)
     calories = Column(Integer)
     food = Column(String)
 
