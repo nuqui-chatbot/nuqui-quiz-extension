@@ -2,7 +2,7 @@
 from nuqui_quiz.dbobjects import User, Score, Question, Meal
 from nuqui_quiz import SESSION, QUESTIONS
 from random import randint, shuffle
-import DateTime
+import datetime
 
 
 def create_user(user_id, user_name):

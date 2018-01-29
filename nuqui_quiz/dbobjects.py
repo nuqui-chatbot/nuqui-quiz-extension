@@ -42,9 +42,9 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    score = relationship("Score", uselist=False)
-    questions = relationship("Question", secondary=User_question)
-    meals = relationship("Meal", secondary=User_meal)
+    score = relationship("Score", uselist=False, cascade="delete")
+    questions = relationship("Question", secondary=User_question, cascade="delete")
+    meals = relationship("Meal", secondary=User_meal, cascade="delete")
 
     def to_dictionary(self):
         return {
