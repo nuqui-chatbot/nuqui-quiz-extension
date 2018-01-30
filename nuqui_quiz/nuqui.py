@@ -70,7 +70,6 @@ def add_meal(user_id, food_dict):
 def _transform_food_dict_to_string_and_cals(food_dict):
     result_list=[]
     calories= 0
-    print(food_dict)
     for key, value in food_dict.items():
         calories+=value["calories"]
         if not result_list:
