@@ -1,6 +1,6 @@
 # a quiz app that tooks the question from http://www.jservice.io/ and put it into the db with https://github.com/nuqui-chatbot/nuqui-question-database
-from nuqui_quiz.dbobjects import User, Score, Question, Meal
-from nuqui_quiz import SESSION, QUESTIONS
+from .dbobjects import User, Score, Question, Meal
+from . import SESSION, QUESTIONS
 from random import randint, shuffle
 import datetime
 
@@ -12,6 +12,7 @@ def create_user(user_id, user_name):
     session.add(user_score)
     session.add(user)
     session.commit()
+    session.close()
 
 
 def remove_user(user_id):
@@ -19,6 +20,7 @@ def remove_user(user_id):
     user = session.query(User).filter_by(id=user_id).one()
     session.delete(user)
     session.commit()
+    session.close()
 
 
 def get_predefined_question_dict_with_random_answers(user_id):
@@ -38,6 +40,7 @@ def get_predefined_question_dict_with_random_answers(user_id):
     question_dict['answer'] = possible_answers
     user.questions.append(question)
     session.commit()
+    session.close()
     return question_dict
 
 
@@ -49,6 +52,7 @@ def _get_three_random_answers(ori_question):
 def evaluate(answer, question_id):
     session = SESSION()
     question = session.query(Question).filter_by(id=question_id).one()
+    session.close()
     return question.answer == answer
 
 
@@ -71,6 +75,7 @@ def add_meal(user_id, food_dict):
     user = session.query(User).filter_by(id=user_id).one()
     user.meals.append(meal)
     session.commit()
+    session.close()
 
 
 def _transform_food_dict_to_string_and_cals(food_dict):

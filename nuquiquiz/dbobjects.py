@@ -31,7 +31,7 @@ class Question(Base):
     def to_dictionary(self):
         return {
                 "id": self.id,
-                "question": self.question_string,
+                "question": self.question,
                 "answer": self.answer,
                 "value": self.value
                 }
