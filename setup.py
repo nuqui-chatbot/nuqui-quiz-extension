@@ -108,6 +108,9 @@ setup(
     #
     #   py_modules=["my_module"],
     #
+    #include_package_data=True,
     packages=find_packages(exclude=['tests']),  # Required
-    install_requires=['sqlalchemy']
+    install_requires=['sqlalchemy'],
+    package_data={
+    '': ['nuqui.db']}
 )
