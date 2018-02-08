@@ -1,4 +1,4 @@
-from context import nuqui_quiz
+from context import nuqui
 
 #nuqui_quiz.remove_user(1)
 #nuqui_quiz.create_user(1, "Peter")

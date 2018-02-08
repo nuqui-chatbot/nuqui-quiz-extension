@@ -32,7 +32,7 @@ setup(
     # There are some restrictions on what makes a valid project name
     # specification here:
     # https://packaging.python.org/specifications/core-metadata/#name
-    name='nuquiquiz',  # Required
+    name='nuqui',  # Required
 
     # Versions should comply with PEP 440:
     # https://www.python.org/dev/peps/pep-0440/
@@ -109,8 +109,8 @@ setup(
     #   py_modules=["my_module"],
     #
     #include_package_data=True,
-    packages=find_packages(exclude=['tests']),  # Required
+    packages=['nuqui'],
+    package_dir={'nuqui': 'nuqui'},
     install_requires=['sqlalchemy'],
-    package_data={
-    '': ['nuqui.db']}
+    package_data={'nuqui': ['data/nuqui.db']}
 )

@@ -1,8 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from .dbobjects import Base, Question, User, Meal, Score
+import pkg_resources
 
-engine = create_engine('sqlite:///nuquiquiz/nuqui.db')
+db_path = pkg_resources.resource_filename('nuqui', 'data/nuqui.db')
+engine = create_engine('sqlite:///'+db_path)
 Base.metadata.bind = engine
 SESSION = sessionmaker(bind=engine)
 Base.metadata.create_all()
