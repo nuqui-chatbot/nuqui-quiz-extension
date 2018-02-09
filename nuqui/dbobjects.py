@@ -7,9 +7,9 @@ global Base
 Base = declarative_base()
 
 User_question = Table(
-        'user_question', Base.metadata,
-        Column('user_id', Integer, ForeignKey('user.id')),
-        Column('question_id', Integer, ForeignKey('downloaded_question.id'))
+    'user_question', Base.metadata,
+    Column('user_id', Integer, ForeignKey('user.id')),
+    Column('question_id', Integer, ForeignKey('downloaded_question.id'))
  )
 
 
@@ -17,6 +17,13 @@ User_meal = Table(
     'user_meal', Base.metadata,
     Column('user_id', Integer, ForeignKey('user.id')),
     Column('meal_id', Integer, ForeignKey('meal.id'))
+)
+
+
+User_open_question = Table(
+    'user_open_question', Base.metadata,
+    Column('user_id', Integer, ForeignKey('user.id')),
+    Column('question_id', Integer, ForeignKey('downloaded_question.id'), nullable=True)
 )
 
 
@@ -45,13 +52,14 @@ class User(Base):
     score = relationship("Score", uselist=False, cascade="delete")
     questions = relationship("Question", secondary=User_question, cascade="delete")
     meals = relationship("Meal", secondary=User_meal, cascade="delete")
+    open_question = relationship("Question", uselist=False, secondary=User_open_question, cascade="delete")
 
     def to_dictionary(self):
         return {
             "id": self.id,
             "name": self.name,
             "points": self.score.points,
-            "last_points": self.score.latest_points,
+            "latest_points": self.score.latest_points,
             "questions": self.questions
         }
 

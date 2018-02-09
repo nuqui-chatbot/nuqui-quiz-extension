@@ -29,6 +29,14 @@ def get_predefined_question_dict_with_random_answers(user_id):
     user = session.query(User).filter_by(id=user_id).one()
     questions_id = user.questions
     possible_questions = [question for question in QUESTIONS if question not in questions_id]
+    # select question form list of possible questions where one of users last 10 meals has relation to
+    last_ten_meals = user.meals[-10:]
+    # _get_ingredient_list(last_ten_meals)
+    _get_ingredient_list(last_ten_meals)
+
+    for meal in last_ten_meals:
+        matching_question = [question for question in QUESTIONS if question == meal]
+
     # select random question from list of possible questions
     question = possible_questions[randint(0, len(possible_questions))]
     # get three random answers and the right answer and shuffle them
@@ -38,10 +46,25 @@ def get_predefined_question_dict_with_random_answers(user_id):
     # create question dict and add the possible answers, then return the dict
     question_dict = question.to_dictionary()
     question_dict['answer'] = possible_answers
+    user.open_question.append(question)
     user.questions.append(question)
     session.commit()
     session.close()
     return question_dict
+
+
+def _get_ingredient_list(meals):
+    """
+    :type meals: list of meal objects
+    """
+    single_ingredient_list = []
+    for meal in meals:
+        amount_ingredient_list = meal.food.split(",")
+        for ing in amount_ingredient_list:
+            ingred = ing.split()
+            single_ingredient_list.append(ingred[1])
+
+    return single_ingredient_list
 
 
 def _get_three_random_answers(ori_question):
@@ -49,14 +72,36 @@ def _get_three_random_answers(ori_question):
     return [random_answers_answer[randint(0, len(random_answers_answer))] for x in range(0, 3)]
 
 
-def evaluate(answer, question_id):
+def evaluate(answer, user_id):
     session = SESSION()
-    question = session.query(Question).filter_by(id=question_id).one()
+    user = session.query(User).filter_by(id=user_id).one()
+    success = user.open_question.answer == answer
+    points = user.open_question.value
+    right_answer = user.open_question.answer
+    if success:
+        user.score.latest_points = points
+        user.score.points += points
+    total_points = user.score.points
+    session.commit()
     session.close()
-    return question.answer == answer
+
+    return {
+        "success": success,
+        "right_answer": right_answer,
+        "achieved_points": points,
+        "total_points": total_points
+    }
 
 
-# ToDo: Calculate new score and return a dictionary containing succes, right answer and achieved points
+# Return the dict of the open question the user has or none if he does not have any (only used for testing)
+def user_get_open_question(user_id):
+    session = SESSION()
+    user = session.query(User).filter_by(id=user_id).one()
+    session.close()
+    if user.open_question is None:
+        return None
+    else:
+        return user.open_question.to_dictionary
 
 
 # food as dict eg:
