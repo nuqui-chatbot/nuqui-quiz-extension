@@ -1,21 +1,21 @@
 from context import nuqui
 
-#nuqui_quiz.remove_user(1)
-#nuqui_quiz.create_user(1, "Peter")
-#print(get_predefined_question(1))
+#nuqui.remove_user(1)
+#nuqui.create_user(1, "Peter")
+nuqui.get_predefined_question_dict_with_random_answers(1)
 
 
-# fruits= {
-#     "apple": {
-#         "amount": 2,
-#         "calories": 50
-#     },
-#     "tomato": {
-#         "amount": 1,
-#         "calories": 10
-#     }
-#  }
+fruits= {
+     "apple": {
+         "amount": 2,
+         "calories": 50
+     },
+     "tomato": {
+         "amount": 1,
+         "calories": 10
+     }
+  }
 
-#nuqui_quiz.add_meal(1, fruits)
+#nuqui.add_meal(1, fruits)
 
-print(nuqui_quiz.evaluate("a shiitake", 156375))
+#print(nuqui.evaluate("a shiitake", 156375))
