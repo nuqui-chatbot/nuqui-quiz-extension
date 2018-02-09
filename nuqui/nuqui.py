@@ -1,6 +1,6 @@
 # a quiz app that tooks the question from http://www.jservice.io/ and put it into the db with https://github.com/nuqui-chatbot/nuqui-question-database
 from .dbobjects import User, Score, Question, Meal
-from . import SESSION, QUESTIONS
+from . import SESSION
 from random import randint, shuffle
 import datetime
 
@@ -28,25 +28,26 @@ def get_predefined_question_dict_with_random_answers(user_id):
     session = SESSION()
     user = session.query(User).filter_by(id=user_id).one()
     questions_id = user.questions
-    possible_questions = [question for question in QUESTIONS if question not in questions_id]
+    all_qustions = session.query(Question).all()
+    possible_questions = [question for question in all_qustions if question not in questions_id]
     # select question form list of possible questions where one of users last 10 meals has relation to
     last_ten_meals = user.meals[-10:]
     # _get_ingredient_list(last_ten_meals)
     _get_ingredient_list(last_ten_meals)
 
     for meal in last_ten_meals:
-        matching_question = [question for question in QUESTIONS if question == meal]
+        matching_question = [question for question in all_qustions if question == meal]
 
     # select random question from list of possible questions
     question = possible_questions[randint(0, len(possible_questions))]
     # get three random answers and the right answer and shuffle them
-    possible_answers = _get_three_random_answers(question)
+    possible_answers = _get_three_random_answers(question, all_qustions)
     possible_answers.append(question.answer)
     shuffle(possible_answers)
     # create question dict and add the possible answers, then return the dict
     question_dict = question.to_dictionary()
     question_dict['answer'] = possible_answers
-    user.open_question.append(question)
+    user.open_question = question
     user.questions.append(question)
     session.commit()
     session.close()
@@ -67,8 +68,8 @@ def _get_ingredient_list(meals):
     return single_ingredient_list
 
 
-def _get_three_random_answers(ori_question):
-    random_answers_answer = [question.answer for question in QUESTIONS if question != ori_question]
+def _get_three_random_answers(ori_question, all_qustions):
+    random_answers_answer = [question.answer for question in all_qustions if question != ori_question]
     return [random_answers_answer[randint(0, len(random_answers_answer))] for x in range(0, 3)]
 
 
