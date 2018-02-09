@@ -49,6 +49,7 @@ def get_predefined_question_dict_with_random_answers(user_id):
     question_dict['answer'] = possible_answers
     user.open_question = question
     user.questions.append(question)
+    user.open_question_answer = _get_letter_of_answer(question.answer, possible_answers) 
     session.commit()
     session.close()
     return question_dict
@@ -67,6 +68,17 @@ def _get_ingredient_list(meals):
 
     return single_ingredient_list
 
+def _get_letter_of_answer(answer, answers_list):
+    index = answers_list.index(answer)
+    if index == 0:
+        return "!A"
+    elif index == 1:
+        return "!B"
+    elif index == 2:
+        return "!C"
+    else:
+        return "!D"
+
 
 def _get_three_random_answers(ori_question, all_qustions):
     random_answers_answer = [question.answer for question in all_qustions if question != ori_question]
@@ -76,7 +88,7 @@ def _get_three_random_answers(ori_question, all_qustions):
 def evaluate(answer, user_id):
     session = SESSION()
     user = session.query(User).filter_by(id=user_id).one()
-    success = user.open_question.answer == answer
+    success = user.open_question_answer == answer
     points = user.open_question.value
     right_answer = user.open_question.answer
     if success:

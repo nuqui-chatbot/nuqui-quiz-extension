@@ -53,6 +53,7 @@ class User(Base):
     questions = relationship("Question", secondary=User_question, cascade="delete")
     meals = relationship("Meal", secondary=User_meal, cascade="delete")
     open_question = relationship("Question", uselist=False, secondary=User_open_question)
+    open_question_answer = Column(String, nullable=True)
 
     def to_dictionary(self):
         return {

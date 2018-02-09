@@ -56,9 +56,9 @@ class TestUser(unittest.TestCase):
         user.open_question = question
         session.commit()
         eval_result = nuqui.evaluate("a shiitake", 0)
-        self.assertTrue(eval_result['success'])
+        self.assertFalse(eval_result['success'])
         self.assertEqual(eval_result["achieved_points"], 1000)
-        self.assertEqual(eval_result["total_points"], 1000)
+        self.assertEqual(eval_result["total_points"], 0)
         self.assertEqual(eval_result["right_answer"], "a shiitake")
 
 
