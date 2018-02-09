@@ -52,7 +52,7 @@ class User(Base):
     score = relationship("Score", uselist=False, cascade="delete")
     questions = relationship("Question", secondary=User_question, cascade="delete")
     meals = relationship("Meal", secondary=User_meal, cascade="delete")
-    open_question = relationship("Question", uselist=False, secondary=User_open_question, cascade="delete")
+    open_question = relationship("Question", uselist=False, secondary=User_open_question)
 
     def to_dictionary(self):
         return {
