@@ -150,3 +150,13 @@ def _transform_food_dict_to_string_and_cals(food_dict):
         "calories": calories,
         "food_string": ''.join(result_list)
     }
+
+def get_score(user_id):
+    session = SESSION()
+    user = session.query(User).filter_by(id=user_id).one()
+    score = user.score
+    session.close()
+
+    return { "latest_points": score.latest_points,
+            "total_points": score.points
+            }

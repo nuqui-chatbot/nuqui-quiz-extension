@@ -61,6 +61,18 @@ class TestUser(unittest.TestCase):
         self.assertEqual(eval_result["total_points"], 0)
         self.assertEqual(eval_result["right_answer"], "a shiitake")
 
+        
+    def test_get_score(self):
+        session = nuqui.SESSION()
+        nuqui.create_user(0, 'testUser')
+        user = session.query(nuqui.User).filter_by(id=0).one()
+        user.score.latest_points = 100
+        user.score.points = 100
+        session.commit()
+        score_dict = nuqui.get_score(0)
+        self.assertEqual(score_dict['latest_points'], 100)
+        self.assertEqual(score_dict['total_points'], 100)
+
 
 if __name__ == '__main__':
     unittest.main()
