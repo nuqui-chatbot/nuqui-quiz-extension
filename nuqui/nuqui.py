@@ -155,8 +155,11 @@ def get_score(user_id):
     session = SESSION()
     user = session.query(User).filter_by(id=user_id).one()
     score = user.score
-    session.close()
-
-    return { "latest_points": score.latest_points,
+    answer_dict = { 
+            "latest_points": score.latest_points,
             "total_points": score.points
             }
+    session.close()
+    return answer_dict
+
+
