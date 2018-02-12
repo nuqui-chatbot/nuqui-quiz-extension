@@ -35,31 +35,11 @@ class TestUser(unittest.TestCase):
     def test_add_meal_work(self):
         session = nuqui.SESSION()
         nuqui.create_user(0, 'testUser')
-        food_dict = {
-                "apple": {
-                    "amount": 1,
-                    "calories": 50
-                    }
-                }
-        nuqui.add_meal(0, food_dict)
+        nuqui.add_meal(0, "wasser,apfel,salz", 200)
         user = session.query(nuqui.User).filter_by(id=0).one()
         meal = user.meals[0]
-        self.assertEqual(meal.calories, 50)
-        self.assertEqual(meal.food, "1 apple")
-
-
-    def test_evaluate(self):
-        session = nuqui.SESSION()
-        nuqui.create_user(0, 'testUser')
-        user = session.query(nuqui.User).filter_by(id=0).one()
-        question = session.query(nuqui.Question).filter_by(id = 156375).one()
-        user.open_question = question
-        session.commit()
-        eval_result = nuqui.evaluate("a shiitake", 0)
-        self.assertFalse(eval_result['success'])
-        self.assertEqual(eval_result["achieved_points"], 1000)
-        self.assertEqual(eval_result["total_points"], 0)
-        self.assertEqual(eval_result["right_answer"], "a shiitake")
+        self.assertEqual(meal.calories, 200)
+        self.assertEqual(meal.food, "wasser,apfel,salz")
 
         
     def test_get_score(self):

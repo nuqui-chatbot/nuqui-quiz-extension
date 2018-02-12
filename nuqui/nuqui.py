@@ -59,14 +59,12 @@ def _get_ingredient_list(meals):
     """
     :type meals: list of meal objects
     """
-    single_ingredient_list = []
+    amount_ingredient_list = []
     for meal in meals:
-        amount_ingredient_list = meal.food.split(",")
-        for ing in amount_ingredient_list:
-            ingred = ing.split()
-            single_ingredient_list.append(ingred[1])
+        amount_ingredient_list.extend(meal.food.split(","))
 
-    return single_ingredient_list
+    return amount_ingredient_list
+
 
 def _get_letter_of_answer(answer, answers_list):
     index = answers_list.index(answer)
@@ -117,39 +115,17 @@ def user_get_open_question(user_id):
         return user.open_question.to_dictionary
 
 
-# food as dict eg:
-# {
-#    "apple" : {
-#        "amount": 1,
-#        "calories": 50
-#    }
-# }
-def add_meal(user_id, food_dict):
+# food_String: a string with ingrediants. e.g. "wasser,zwiblen,salz"
+def add_meal(user_id, food_string, calories):
     session = SESSION()
-    transformed_dict = _transform_food_dict_to_string_and_cals(food_dict)
-    meal = Meal(timestamp=datetime.datetime.now(), calories=transformed_dict["calories"],
-                food=transformed_dict["food_string"])
+    meal = Meal(timestamp=datetime.datetime.now(), calories=calories,
+                food=food_string)
     session.add(meal)
     user = session.query(User).filter_by(id=user_id).one()
     user.meals.append(meal)
     session.commit()
     session.close()
 
-
-def _transform_food_dict_to_string_and_cals(food_dict):
-    result_list = []
-    calories = 0
-    for key, value in food_dict.items():
-        calories += value["calories"]
-        if not result_list:
-            result_list.append(str(value["amount"]) + " " + key)
-        else:
-            result_list.append("," + str(value["amount"]) + " " + key)
-
-    return {
-        "calories": calories,
-        "food_string": ''.join(result_list)
-    }
 
 def get_score(user_id):
     session = SESSION()
