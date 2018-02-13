@@ -29,14 +29,18 @@ def get_predefined_question_dict_with_random_answers(user_id):
     user = session.query(User).filter_by(id=user_id).one()
     questions_id = user.questions
     all_qustions = session.query(Question).all()
-    possible_questions = [question for question in all_qustions if question not in questions_id]
+    possible_questions = []
     # select question form list of possible questions where one of users last 10 meals has relation to
     last_ten_meals = user.meals[-10:]
-    # _get_ingredient_list(last_ten_meals)
-    _get_ingredient_list(last_ten_meals)
+    if last_ten_meals is not None:
+        # _get_ingredient_list(last_ten_meals)
+        ingred_last_meals = _get_ingredient_list(last_ten_meals)
 
-    for meal in last_ten_meals:
-        matching_question = [question for question in all_qustions if question == meal]
+        for ing in ingred_last_meals:
+            possible_questions.extend(session.query(Question).filter(Question.answer.like("%" + ing + "%")).all())
+            possible_questions.extend(session.query(Question).filter(Question.question.like("%" + ing + "%")).all())
+    else:
+        possible_questions = [question for question in all_qustions if question not in questions_id]
 
     # select random question from list of possible questions
     question = possible_questions[randint(0, len(possible_questions))]
