@@ -43,7 +43,7 @@ def get_predefined_question_dict_with_random_answers(user_id):
         possible_questions = [question for question in all_qustions if question not in questions_id]
 
     # select random question from list of possible questions
-    question = possible_questions[randint(0, len(possible_questions))]
+    question = possible_questions[randint(0, len(possible_questions) - 1)]
     # get three random answers and the right answer and shuffle them
     possible_answers = _get_three_random_answers(question, all_qustions)
     possible_answers.append(question.answer)
@@ -84,7 +84,7 @@ def _get_letter_of_answer(answer, answers_list):
 
 def _get_three_random_answers(ori_question, all_qustions):
     random_answers_answer = [question.answer for question in all_qustions if question != ori_question]
-    return [random_answers_answer[randint(0, len(random_answers_answer))] for x in range(0, 3)]
+    return [random_answers_answer[randint(0, len(random_answers_answer) - 1)] for x in range(0, 3)]
 
 
 def evaluate(answer, user_id):
